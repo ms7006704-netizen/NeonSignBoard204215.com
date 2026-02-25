@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>NeonSignBoard - Customize (Complete Preview)</title>
+
+  <!-- Google Fonts (25 fonts) -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Roboto:wght@400;700&family=Montserrat:wght@400;700&family=Lato:wght@400;700&family=Open+Sans:wght@400;700&family=Ubuntu:wght@400;700&family=Raleway:wght@400;700&family=Oswald:wght@400;700&family=Playfair+Display:wght@400;700&family=Merriweather:wght@400;700&family=Fredoka+One&family=Lobster&family=Pacifico&family=Exo+2:wght@400;700&family=Rubik:wght@400;700&family=Josefin+Sans:wght@400;700&family=Quicksand:wght@400;700&family=Anton&family=Nunito:wght@400;700&family=Archivo:wght@400;700&family=Titillium+Web:wght@400;700&family=Source+Sans+3:wght@400;700&family=Alegreya:wght@400;700&family=Cinzel:wght@400;700&family=Karla:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg1:#ff69b4; /* pink */
+      --bg2:#0099ff; /* blue */
+      --bg3:#8a2be2; /* purple */
+      --muted:#cfcfcf;
+      --accent1:#ff2db8;
+      --accent2:#3fc6ff;
+      --card:#0f0f0f;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    /* Important: keep font-size fixed at 25px as requested */
+    html,body{height:100%}
+    body{
+      background: linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+      background-attachment: fixed;
+      color:#fff;
+      font-family:'Poppins',sans-serif;
+      font-size:25px;
+      line-height:1.35;
+      -webkit-font-smoothing:antialiased;
+      margin:0;
+      padding:0;
+    }
+    header{padding:18px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);background:linear-gradient(90deg,rgba(0,0,0,0.12),rgba(0,0,0,0.06))}
+    header h1{font-family:'Lobster',cursive;margin:0;font-size:1.9rem;color:#fff}
+    header p{font-size:0.95rem;color:var(--muted);margin:6px 0}
+    main{max-width:1200px;margin:20px auto;padding:12px}
+    .grid{display:grid;grid-template-columns:1fr 420px;gap:18px;align-items:start}
+    .card{background:rgba(0,0,0,0.45);border:1px solid rgba(255,255,255,0.03);padding:16px;border-radius:12px}
+    label{display:block;color:var(--muted);font-size:13px;margin-top:10px}
+    input[type="text"],input[type="number"],select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff;margin-top:6px;font-size:14px}
+    select.color-select{appearance:none;-webkit-appearance:none}
+    .row{display:flex;gap:10px}
+    .half{flex:1}
+    .btn{background:linear-gradient(90deg,var(--accent1),var(--accent2));border:0;padding:10px 14px;border-radius:10px;color:#000;font-weight:700;cursor:pointer;margin-top:12px;font-size:16px}
+    .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);font-weight:600}
+    .preview{margin-top:12px;padding:18px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);min-height:120px;display:flex;align-items:center;justify-content:center;text-align:center}
+    .preview .text{font-size:25px;font-weight:700;transition: all 250ms ease}
+    .rate-line{margin-top:10px;color:var(--muted);font-weight:700}
+    .estimate-box{margin-top:10px;background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+    footer{text-align:center;color:var(--muted);margin-top:22px;padding-bottom:28px}
+
+    /* neon info box (black bg + neon border) */
+    .neon-box{background:rgba(0,0,0,0.5);border-radius:10px;padding:12px;margin-top:12px;border:1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 0 20px rgba(63,198,255,0.06), inset 0 0 8px rgba(255,45,184,0.03); color:var(--muted); text-align:left}
+    .neon-box strong{color:#fff}
+
+    /* ============================
+       MULTICOLOR: 16-color rainbow palette (no movement)
+       15 animation modes — only color/opacity/scale variations
+       ============================ */
+
+    /* base class to ensure no glow */
+    .mc-base{color:#fff;text-shadow:none}
+
+    /* 16-color smooth cycle (uses background-clip) */
+    .mc-cycle{
+      background: linear-gradient(90deg,
+        #FF0000, #FF7A00, #FFD600, #9AFF00, #00FFDD, #00A5FF, #0066FF, #4B00FF,
+        #9F00FF, #FF00E6, #FF007A, #FF0044, #FF6F00, #FFC100, #00FF99, #00FFE0
+      );
+      background-size:1600% 100%;
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      animation:mc_cycle 8s linear infinite;
+    }
+    @keyframes mc_cycle{0%{background-position:0% 50%}100%{background-position:1600% 50%}}
+
+    /* 2 - color steps (16 discrete colors) */
+    @keyframes mc_steps { 
+      0%{color:#FF0000} 6.25%{color:#FF7A00} 12.5%{color:#FFD600} 18.75%{color:#9AFF00}
+      25%{color:#00FFDD} 31.25%{color:#00A5FF} 37.5%{color:#0066FF} 43.75%{color:#4B00FF}
+      50%{color:#9F00FF} 56.25%{color:#FF00E6} 62.5%{color:#FF007A} 68.75%{color:#FF0044}
+      75%{color:#FF6F00} 81.25%{color:#FFC100} 87.5%{color:#00FF99} 93.75%{color:#00FFE0} 100%{color:#FF0000}
+    }
+    .mc-steps{animation:mc_steps 8s steps(16,end) infinite}
+
+    /* 3 - blink (fast on/off color change) */
+    @keyframes mc_blink {0%,100%{opacity:1} 50%{opacity:0}}
+    .mc-blink{animation:mc_blink 1s steps(2,end) infinite}
+
+    /* 4 - flicker (random feel but no movement) */
+    @keyframes mc_flicker {0%{opacity:1}10%{opacity:0.45}20%{opacity:1}30%{opacity:0.6}40%{opacity:1}100%{opacity:1}}
+    .mc-flicker{animation:mc_flicker 2.6s linear infinite}
+
+    /* 5 - slow pulse (subtle scale + color cycle) */
+    @keyframes mc_pulse {0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+    .mc-pulse{display:inline-block;animation:mc_pulse 2.2s ease-in-out infinite}
+
+    /* 6 - soft fade in/out of colors */
+    @keyframes mc_fade {0%{opacity:0.2}50%{opacity:1}100%{opacity:0.2}}
+    .mc-fade{animation:mc_fade 4s ease-in-out infinite}
+
+    /* 7 - strobe (fast steps) */
+    .mc-strobe{animation:mc_steps 1.4s steps(16,end) infinite}
+
+    /* 8 - shimmer (subtle light bar) - color cycle base */
+    .mc-shimmer{position:relative;display:inline-block;animation:none}
+    .mc-shimmer.mc-cycle{animation:mc_cycle 8s linear infinite}
+    .mc-shimmer::after{
+      content:"";position:absolute;left:-80%;top:0;width:60%;height:100%;
+      background:linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02), rgba(255,255,255,0.06));
+      transform:skewX(-20deg);
+      animation:mc_shimmer 2.2s linear infinite;pointer-events:none;
+    }
+    @keyframes mc_shimmer{0%{left:-80%}100%{left:120%}}
+
+    /* 9 - slow cycle (very slow color interpolation) */
+    .mc-slow{animation:mc_cycle 14s linear infinite}
+
+    /* 10 - fast cycle */
+    .mc-fast{animation:mc_cycle 4s linear infinite}
+
+    /* 11 - alternating step (two-color alternate using steps) */
+    @keyframes mc_alt {0%{color:#FF0000}50%{color:#00A5FF}100%{color:#FF0000}}
+    .mc-alt{animation:mc_alt 2.4s steps(2,end) infinite}
+
+    /* 12 - soft color flash */
+    @keyframes mc_flash {0%{opacity:0.3}25%{opacity:1}75%{opacity:0.4}100%{opacity:1}}
+    .mc-flash{animation:mc_flash 3s linear infinite}
+
+    /* 13 - neon pulse (fast) */
+    @keyframes mc_neonp {0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)}}
+    .mc-neonp{display:inline-block;animation:mc_neonp 1.2s ease-in-out infinite}
+
+    /* 14 - color wave (no translate, just timed color shifts) */
+    .mc-wave2{animation:mc_steps 6s steps(16,end) infinite}
+
+    /* 15 - pastel cycle (slower, softer colors) */
+    .mc-pastel{
+      background: linear-gradient(90deg,
+        #FF6F91, #FF9671, #FFD66B, #C8FF6A, #80FFE8, #75B9FF, #9D8CFF, #D69AFF,
+        #F9A1FF, #FF9BC2, #FFB273, #FFE0B2, #BFFCC6, #B6E8FF, #C8B6FF, #FFD6F0
+      );
+      background-size:1600% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:mc_cycle 12s linear infinite;
+    }
+
+    /* Sample images section styles (kept simple and matching theme) */
+    .samples-section{max-width:1200px;margin:18px auto;padding:0 12px}
+    .samples{background:rgba(0,0,0,0.35);border-radius:12px;padding:24px;color:#fff}
+    .samples h2{margin:0 0 18px 0;font-size:26px}
+    .sample-grid{display:flex;flex-wrap:wrap;gap:18px;justify-content:center}
+    .sample-card{width:260px;background:rgba(255,255,255,0.03);padding:12px;border-radius:12px;text-align:center;transition:transform .25s,box-shadow .25s}
+    .sample-card img{width:100%;border-radius:10px;display:block}
+    .sample-card p{margin-top:8px;font-weight:700}
+
+    @media (max-width:980px){
+      .grid{grid-template-columns:1fr;gap:12px}
+      .preview .text{font-size:25px}
+      .samples h2{font-size:22px}
+    }
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <div style="max-width:1200px;margin:0 auto;padding:8px">
+      <h1 style="margin:0;font-family:'Lobster',cursive;color:#fff">NeonSignBoard204215.com</h1>
+      <p style="margin:6px 0;color:var(--muted)"><strong>Director:</strong> Sonu Singh Chauhan • 📞 8755730689 • neonsignboard204214@gmail.com</p>
+      <p style="margin:4px 0;color:var(--muted)">Purani Tahsil Road, Shahbuddin Ganj, Sikandra Rao, Hathras, Uttar Pradesh - 204215</p>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid">
+
+      <!-- LEFT: Forms (Single + Multi stacked) -->
+      <div>
+
+        <!-- Single Colour Card -->
+        <div class="card">
+          <h2>💡 Customize Your Single Colour Board</h2>
+          <p style="color:var(--muted);font-size:13px;margin-top:6px">Choose font, color and size. <strong>Rate: ₹10 per square inch</strong></p>
+
+          <label for="sText">Sign Text</label>
+          <input id="sText" type="text" placeholder="Enter sign text">
+
+          <label for="sFont">Font</label>
+          <select id="sFont">
+            <!-- 25 fonts (Google fonts) -->
+            <option value="'Poppins',sans-serif">Poppins</option>
+            <option value="'Roboto',sans-serif">Roboto</option>
+            <option value="'Montserrat',sans-serif">Montserrat</option>
+            <option value="'Lato',sans-serif">Lato</option>
+            <option value="'Open Sans',sans-serif">Open Sans</option>
+            <option value="'Ubuntu',sans-serif">Ubuntu</option>
+            <option value="'Raleway',sans-serif">Raleway</option>
+            <option value="'Oswald',sans-serif">Oswald</option>
+            <option value="'Playfair Display',serif">Playfair Display</option>
+            <option value="'Merriweather',serif">Merriweather</option>
+            <option value="'Fredoka One',cursive">Fredoka One</option>
+            <option value="'Lobster',cursive">Lobster</option>
+            <option value="'Pacifico',cursive">Pacifico</option>
+            <option value="'Exo 2',sans-serif">Exo 2</option>
+            <option value="'Rubik',sans-serif">Rubik</option>
+            <option value="'Josefin Sans',sans-serif">Josefin Sans</option>
+            <option value="'Quicksand',sans-serif">Quicksand</option>
+            <option value="'Anton',sans-serif">Anton</option>
+            <option value="'Nunito',sans-serif">Nunito</option>
+            <option value="'Archivo',sans-serif">Archivo</option>
+            <option value="'Titillium Web',sans-serif">Titillium Web</option>
+            <option value="'Source Sans 3',sans-serif">Source Sans 3</option>
+            <option value="'Alegreya',serif">Alegreya</option>
+            <option value="'Cinzel',serif">Cinzel</option>
+            <option value="'Karla',sans-serif">Karla</option>
+          </select>
+
+          <label for="sColor">Color (choose)</label>
+          <select id="sColor" class="color-select">
+            <option value="#FF0000">Red</option>
+            <option value="#FFD600">Yellow</option>
+            <option value="#FF69B4">Pink</option>
+            <option value="#FFDAB9">Warm White</option>
+            <option value="#0099FF">Blue</option>
+            <option value="#00C853">Green</option>
+          </select>
+
+          <div class="row">
+            <div class="half">
+              <label for="sHeight">Height (inch)</label>
+              <input id="sHeight" type="number" placeholder="e.g. 12" min="0">
+            </div>
+            <div class="half">
+              <label for="sWidth">Width (inch)</label>
+              <input id="sWidth" type="number" placeholder="e.g. 36" min="0">
+            </div>
+          </div>
+
+          <div class="preview" id="sPreview" aria-live="polite">
+            <div class="text" id="sPreviewText" style="font-family:'Poppins',sans-serif;color:#fff">Your Text Here</div>
+          </div>
+
+          <div class="rate-line">Rate: ₹10 per square inch</div>
+
+          <div class="estimate-box">
+            <div>Estimated Rate</div>
+            <div id="sEstimate">₹ 0.00</div>
+          </div>
+
+          <div style="display:flex;gap:10px;">
+            <button class="btn" id="sOrderBtn">Order Single Colour Design (WhatsApp)</button>
+            <button class="btn secondary" id="sFill">Fill Sample</button>
+          </div>
+
+          <div class="neon-box" aria-live="polite">
+            <strong>Warranty:</strong> 6 Months<br>
+            <strong>Note:</strong> Design will not be refunded after order and 50% advance has to be paid in advance.
+          </div>
+        </div>
+        <!-- /Single Colour Card -->
+
+        <!-- Multicolor Card -->
+        <div class="card" style="margin-top:16px">
+          <h2>💫 Customize Your Multicolor Board</h2>
+          <p style="color:var(--muted);font-size:13px;margin-top:6px">Rainbow color-changing modes (no text movement). <strong>Rate: ₹20 per square inch</strong></p>
+
+          <label for="mText">Sign Text</label>
+          <input id="mText" type="text" placeholder="Enter multicolor sign text">
+
+          <label for="mFont">Font</label>
+          <select id="mFont">
+            <!-- same 25 fonts -->
+            <option value="'Poppins',sans-serif">Poppins</option>
+            <option value="'Roboto',sans-serif">Roboto</option>
+            <option value="'Montserrat',sans-serif">Montserrat</option>
+            <option value="'Lato',sans-serif">Lato</option>
+            <option value="'Open Sans',sans-serif">Open Sans</option>
+            <option value="'Ubuntu',sans-serif">Ubuntu</option>
+            <option value="'Raleway',sans-serif">Raleway</option>
+            <option value="'Oswald',sans-serif">Oswald</option>
+            <option value="'Playfair Display',serif">Playfair Display</option>
+            <option value="'Merriweather',serif">Merriweather</option>
+            <option value="'Fredoka One',cursive">Fredoka One</option>
+            <option value="'Lobster',cursive">Lobster</option>
+            <option value="'Pacifico',cursive">Pacifico</option>
+            <option value="'Exo 2',sans-serif">Exo 2</option>
+            <option value="'Rubik',sans-serif">Rubik</option>
+            <option value="'Josefin Sans',sans-serif">Josefin Sans</option>
+            <option value="'Quicksand',sans-serif">Quicksand</option>
+            <option value="'Anton',sans-serif">Anton</option>
+            <option value="'Nunito',sans-serif">Nunito</option>
+            <option value="'Archivo',sans-serif">Archivo</option>
+            <option value="'Titillium Web',sans-serif">Titillium Web</option>
+            <option value="'Source Sans 3',sans-serif">Source Sans 3</option>
+            <option value="'Alegreya',serif">Alegreya</option>
+            <option value="'Cinzel',serif">Cinzel</option>
+            <option value="'Karla',sans-serif">Karla</option>
+          </select>
+
+          <label for="mMode">Color Mode (sample mode)</label>
+          <select id="mMode">
+            <option value="mc-cycle">1 - Smooth Color Cycle</option>
+            <option value="mc-steps">2 - Color Steps (16 discrete)</option>
+            <option value="mc-blink">3 - Blink</option>
+            <option value="mc-flicker">4 - Flicker</option>
+            <option value="mc-fade mc-pastel">5 - Soft Fade (pastel)</option>
+            <option value="mc-strobe">6 - Strobe</option>
+            <option value="mc-shimmer mc-cycle">7 - Shimmer</option>
+            <option value="mc-slow mc-cycle">8 - Slow Cycle</option>
+            <option value="mc-fast mc-cycle">9 - Fast Cycle</option>
+            <option value="mc-alt">11 - Alt Two-Color</option>
+            <option value="mc-flash">12 - Soft Flash</option>
+            <option value="mc-neonp mc-cycle">13 - Neon Pulse</option>
+            <option value="mc-wave2 mc-steps">14 - Wave Step</option>
+            <option value="mc-pastel">15 - Pastel Cycle</option>
+          </select>
+
+          <div class="row">
+            <div class="half">
+              <label for="mHeight">Height (inch)</label>
+              <input id="mHeight" type="number" placeholder="e.g. 12" min="0">
+            </div>
+            <div class="half">
+              <label for="mWidth">Width (inch)</label>
+              <input id="mWidth" type="number" placeholder="e.g. 36" min="0">
+            </div>
+          </div>
+
+          <div class="preview" id="mPreview" aria-live="polite">
+            <div class="text mc-base" id="mPreviewText" style="font-family:'Poppins',sans-serif;color:#fff">Your Multicolor Text</div>
+          </div>
+
+          <div class="rate-line">Rate: ₹20 per square inch</div>
+
+          <div class="estimate-box">
+            <div>Estimated Rate</div>
+            <div id="mEstimate">₹ 0.00</div>
+          </div>
+
+          <div style="display:flex;gap:10px;">
+            <button class="btn" id="mOrderBtn">Order Multicolor Design (WhatsApp)</button>
+            <button class="btn secondary" id="mFill">Fill Sample</button>
+          </div>
+
+          <div class="neon-box" aria-live="polite">
+            <strong>Warranty:</strong> 6 Months<br>
+            <strong>Features:</strong><br>
+            • Control with Remote<br>
+            • Control with Voice Effect<br>
+            • Control by Mobile App<br>
+            • 150+ Modes and More<br><br>
+            <strong>Note:</strong> Design will not be refunded after order and 50% advance has to be paid in advance.
+          </div>
+        </div>
+        <!-- /Multicolor Card -->
+
+      </div>
+      <!-- /LEFT -->
+
+      <!-- RIGHT: Summary / Quick Preview -->
+      <aside>
+        <div class="card">
+          <h3>Quick Summary</h3>
+          <p style="color:var(--muted);font-size:13px">Single Colour</p>
+          <div style="margin-top:8px;color:#fff">
+            <div id="quickSText">Text: -</div>
+            <div id="quickSSize">Size: -</div>
+            <div id="quickSPrice">Total: ₹ 0.00</div>
+            <div style="height:8px"></div>
+            <p style="color:var(--muted);font-size:13px;margin:0">Multicolor</p>
+            <div id="quickMText">Text: -</div>
+            <div id="quickMSize">Size: -</div>
+            <div id="quickMPrice">Total: ₹ 0.00</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <h3>Our Samples</h3>
+          <div style="margin-top:10px;color:var(--muted);font-size:13px">Place sample images inside <code>images/</code> folder with these names:</div>
+          <ul style="text-align:left;color:var(--muted);margin-top:8px">
+            <li>welcome.jpeg</li>
+            <li>as-heart.jpeg</li>
+            <li>heart-beat.jpeg</li>
+            <li>sewing-machine.jpeg</li>
+          </ul>
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- Sample Images Section (above footer) -->
+    <div class="samples-section">
+      <div class="samples">
+        <h2>Sample Image Preview</h2>
+        <div class="sample-grid" aria-live="polite">
+          <div class="sample-card">
+            <img src="neonsignboard.com/images/welcome.jpeg" alt="WELCOME">
+            <p>WELCOME</p>
+          </div>
+          <div class="sample-card">
+            <img src="neonsignboard.com/images/as-heart.jpeg" alt="AS HEART">
+            <p>AS HEART</p>
+          </div>
+          <div class="sample-card">
+            <img src="neonsignboard.com/images/heart-beat.jpeg" alt="HEART BEAT">
+            <p>HEART BEAT</p>
+          </div>
+          <div class="sample-card">
+            <img src="neonsignboard.com/images/sewing-machine.jpeg" alt="SEWING MACHINE">
+            <p>SEWING MACHINE</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>© 2025 NeonSignBoard204215.com • 8755730689</p>
+  </footer>
+
+  <script>
+    // Elements: Single
+    const sText = document.getElementById('sText');
+    const sFont = document.getElementById('sFont');
+    const sColor = document.getElementById('sColor');
+    const sHeight = document.getElementById('sHeight');
+    const sWidth = document.getElementById('sWidth');
+    const sPreviewText = document.getElementById('sPreviewText');
+    const sEstimate = document.getElementById('sEstimate');
+    const sOrderBtn = document.getElementById('sOrderBtn');
+    const sFill = document.getElementById('sFill');
+
+    // Elements: Multi
+    const mText = document.getElementById('mText');
+    const mFont = document.getElementById('mFont');
+    const mMode = document.getElementById('mMode');
+    const mHeight = document.getElementById('mHeight');
+    const mWidth = document.getElementById('mWidth');
+    const mPreviewText = document.getElementById('mPreviewText');
+    const mEstimate = document.getElementById('mEstimate');
+    const mOrderBtn = document.getElementById('mOrderBtn');
+    const mFill = document.getElementById('mFill');
+
+    // Quick
+    const quickSText = document.getElementById('quickSText');
+    const quickSSize = document.getElementById('quickSSize');
+    const quickSPrice = document.getElementById('quickSPrice');
+    const quickMText = document.getElementById('quickMText');
+    const quickMSize = document.getElementById('quickMSize');
+    const quickMPrice = document.getElementById('quickMPrice');
+
+    const RATE_SINGLE = 10;
+    const RATE_MULTI = 20;
+
+    // Single update
+    function updateSingle(){
+      const txt = sText.value || 'Your Text Here';
+      const font = sFont.value;
+      const color = sColor.value;
+      const h = parseFloat(sHeight.value) || 0;
+      const w = parseFloat(sWidth.value) || 0;
+      const area = h * w;
+      const total = area * RATE_SINGLE;
+      sPreviewText.textContent = txt;
+      sPreviewText.style.fontFamily = font;
+      sPreviewText.style.color = color;
+      sPreviewText.style.textShadow = 'none';
+      sEstimate.textContent = `₹ ${total.toFixed(2)}`;
+      quickSText.textContent = `Text: ${sText.value || '-'}`;
+      quickSSize.textContent = `Size: ${h} × ${w} in`;
+      quickSPrice.textContent = `Total: ₹ ${total.toFixed(2)}`;
+    }
+
+    // Multi update (apply font + selected mode classes)
+    function updateMulti(){
+      const txt = mText.value || 'Your Multicolor Text';
+      const font = mFont.value;
+      const modeValue = mMode.value; // may contain multiple classes separated by space
+      const h = parseFloat(mHeight.value) || 0;
+      const w = parseFloat(mWidth.value) || 0;
+      const area = h * w;
+      const total = area * RATE_MULTI;
+
+      mPreviewText.textContent = txt;
+      mPreviewText.style.fontFamily = font;
+      // reset classes
+      mPreviewText.className = 'text mc-base';
+      // add classes from selected mode
+      if(modeValue){
+        modeValue.split(' ').forEach(c => { if(c.trim()) mPreviewText.classList.add(c.trim()); });
+      }
+      // ensure no glow/textShadow
+      mPreviewText.style.textShadow = 'none';
+      mEstimate.textContent = `₹ ${total.toFixed(2)}`;
+      quickMText.textContent = `Text: ${mText.value || '-'}`;
+      quickMSize.textContent = `Size: ${h} × ${w} in`;
+      quickMPrice.textContent = `Total: ₹ ${total.toFixed(2)}`;
+    }
+
+    // Event listeners (font change reflect immediately)
+    [sText,sFont,sColor,sHeight,sWidth].forEach(el => el.addEventListener('input', updateSingle));
+    [mText,mFont,mMode,mHeight,mWidth].forEach(el => el.addEventListener('input', updateMulti));
+
+    // Sample fill actions
+    sFill.addEventListener('click', () => {
+      sText.value = 'Anshika Neon Sign';
+      sFont.value = "'Poppins',sans-serif";
+      sColor.value = '#FF0000';
+      sHeight.value = 12;
+      sWidth.value = 36;
+      updateSingle();
+    });
+
+    mFill.addEventListener('click', () => {
+      mText.value = 'Anshika Multicolor';
+      mFont.value = "'Poppins',sans-serif";
+      mMode.value = 'mc-cycle';
+      mHeight.value = 12;
+      mWidth.value = 36;
+      updateMulti();
+    });
+
+    // WhatsApp order (Single)
+    sOrderBtn.addEventListener('click', () => {
+      const txt = sText.value || '-';
+      const fontName = sFont.options[sFont.selectedIndex].text || sFont.value;
+      const colorLabel = sColor.options[sColor.selectedIndex]?.text || sColor.value;
+      const h = parseFloat(sHeight.value) || 0;
+      const w = parseFloat(sWidth.value) || 0;
+      const area = h * w;
+      const total = (area * RATE_SINGLE).toFixed(2);
+      const msg = `*Neon Single Colour Order*%0AText: ${encodeURIComponent(txt)}%0AFont: ${encodeURIComponent(fontName)}%0AColor: ${encodeURIComponent(colorLabel)}%0AHeight: ${h} inch%0AWidth: ${w} inch%0AArea: ${area} in²%0ATotal: ₹${total}%0ARate: ₹10 per square inch`;
+      window.open(`https://wa.me/918755730689?text=${msg}`, '_blank');
+    });
+
+    // WhatsApp order (Multicolor)
+    mOrderBtn.addEventListener('click', () => {
+      const txt = mText.value || '-';
+      const fontName = mFont.options[mFont.selectedIndex].text || mFont.value;
+      const modeText = mMode.options[mMode.selectedIndex]?.text || mMode.value;
+      const h = parseFloat(mHeight.value) || 0;
+      const w = parseFloat(mWidth.value) || 0;
+      const area = h * w;
+      const total = (area * RATE_MULTI).toFixed(2);
+      const msg = `*Neon Multicolor Order*%0AText: ${encodeURIComponent(txt)}%0AFont: ${encodeURIComponent(fontName)}%0AMode: ${encodeURIComponent(modeText)}%0AHeight: ${h} inch%0AWidth: ${w} inch%0AArea: ${area} in²%0ATotal: ₹${total}%0ARate: ₹20 per square inch`;
+      window.open(`https://wa.me/918755730689?text=${msg}`, '_blank');
+    });
+
+    // Initialize
+    updateSingle();
+    updateMulti();
+  </script>
+</body>
+</html>
